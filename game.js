@@ -200,56 +200,10 @@ class Level {
 
 Level.prototype.status = null;
 Level.prototype.finishDelay = 1;
-/*const grid = [ [1, 4, 50], [2, 4, 4, 34], [5], [1,1,1,1,1] ];
-let lev = new Level(grid);
-console.log(lev.width);
-console.log(lev.height);*/
-
-/*
-const grid = [
-  [undefined, undefined],
-  ['wall', 'wall']
-];
-
-function MyCoin(title) {
-  this.type = 'coin';
-  this.title = title;
-}
-MyCoin.prototype = Object.create(Actor);
-MyCoin.constructor = MyCoin;
-
-const goldCoin = new MyCoin('������');
-const bronzeCoin = new MyCoin('������');
-const player = new Actor();
-const fireball = new Actor();
 
 
-const level = new Level(grid, [ goldCoin, bronzeCoin, player, fireball ]);
 
-level.playerTouched('coin', goldCoin);
-level.playerTouched('coin', bronzeCoin);
 
-if (level.noMoreActors('coin')) {
-  console.log('��� ������ �������');
-  console.log(`������ ����: ${level.status}`);
-} else { console.log('coins not collected')}
-
-const obstacle = level.obstacleAt(new Vector(1, 1), player.size);
-if (obstacle) {
-  console.log(`�� ���� �����������: ${obstacle}`);
-}
-
-const otherActor = level.actorAt(player);
-if (otherActor === fireball) {
-  console.log('������������ ���������� � ������� �������');
-} */
-/*
-const grid = [
-    new Array(3),
-    ['wall', 'wall', 'lava']
-];*/
-//const level = new Level(grid);
-//runLevel(level, DOMDisplay);
 
 class LevelParser {
     constructor(dict) {
@@ -345,3 +299,17 @@ class VerticalFireball extends Fireball {
         this.speed = new Vector(0, 2);
     }
 }
+
+const schema = [
+    '         ',
+    '         ',
+    '         ',
+    '  x      ',
+    '     !xxx',
+    '         ',
+    'xxx!     ',
+    '       !!'
+  ];
+  const parser = new LevelParser();
+  const level = parser.parse(schema);
+  runLevel(level, DOMDisplay);
