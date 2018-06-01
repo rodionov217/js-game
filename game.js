@@ -7,7 +7,7 @@ class Vector {
     }
     plus(vector) {
         if (vector instanceof Vector === false) {
-            throw new Error('Можно прибавлять к ветору только вектор типа Vector')
+            throw new Error('пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ Vector')
         } else {
             let newX = vector.x + this.x;
             let newY = vector.y + this.y;
@@ -18,7 +18,7 @@ class Vector {
         return new Vector(this.x * t, this.y * t)
     }
 }
-//Проверка работоспособности класса Вектор
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 /*const start = new Vector(30, 50);
 const moveTo = new Vector(5, 10);
 const finish = start.plus(moveTo.times(2));
@@ -32,37 +32,43 @@ class Actor {
             this.pos = position;
             this.size = size;
             this.speed = speed;
+            this.act = new Function();
         } else {
-            throw new Error('Переданный вектор не является типом Vector')
+            throw new Error('пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Vector');
         }
     }
-    get left() { return this.pos.x }
-    get top() { return this.pos.y }
+    get left() { return this.pos.x;}
+    get top() { return this.pos.y; }
     get right() { return this.pos.x + this.size.x; }
-    get bottom() { return this.pos.y + this.size.y }
+    get bottom() { return this.pos.y + this.size.y; }
+    
 }
 Object.defineProperty(Actor.prototype, 'type', {
-
     value: 'actor',
     enumerable: true,
-    configurable: true
-
+    configurable: true,
 });
 
 Actor.prototype.isIntersect = function (actor) {
     if (actor instanceof Actor === false) {
-        throw new Error('Некорректный тип Actor')
+        throw new Error('пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Actor')
     } else if (this === actor) {
         return false;
-    } else if (this.right > actor.left && this.right < actor.right) {
+    } else if ((this.top === actor.bottom && this.left === actor.right) || (this.top === actor.bottom && this.right === actor.left) || (this.bottom === actor.top && this.right === actor.left) || (this.bottom === actor.top && this.left === actor.right)) {return true;}
+    else if (this.left > actor.right && this.right >= actor.right) {return false;}
+      else if (this.right < actor.left && this.left <= actor.left) {return false;}
+      else if (this.bottom > actor.top && this.top >= actor.top) {return false;}
+      else if (this.top < actor.bottom && this.bottom <= actor.bottom)  {
 
-        return true;
-    } else if (this.top < actor.top && this.bottom > actor.bottom) {
-        return true;
-    } 
-    
-    else {
         return false;
+    } 
+    /* РїРѕРїС‹С‚РєР° РїСЂРѕР№С‚Рё РїРѕСЃР»РµРґРЅРёР№ С‚РµСЃС‚ "РћР±СЉРµРєС‚ РїРµСЂРµСЃРµРєР°РµС‚СЃСЏ СЃ РѕР±СЉРµРєС‚РѕРј, РєРѕС‚РѕСЂС‹Р№ С‡Р°СЃС‚РёС‡РЅРѕ СЃРѕРґРµСЂР¶РёС‚СЃСЏ РІ РЅС‘Рј". РЅРµ РїСЂРѕС…РѕРґРёС‚
+    else if (((actor.left >= this.left && actor.left <= this.right) || (actor.right >= this.left && actor.right <= this.right)) &&  ((actor.top >= this.bottom && actor.top <= this.top) || (actor.bottom >= this.bottom && actor.bottom <= this.top))) {return true;}
+    */
+   //РµС‰Рµ РїРѕРїС‹С‚РєР°
+  
+    else {
+        return true;
     }
 }
 
@@ -70,9 +76,9 @@ Actor.prototype.isIntersect = function (actor) {
 const items = new Map();
 
 const player = new Actor();
-items.set('Игрок', player);
-items.set('Первая монета', new Actor(new Vector(10, 10)));
-items.set('Вторая монета', new Actor(new Vector(15, 5)));
+items.set('пїЅпїЅпїЅпїЅпїЅ', player);
+items.set('пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ', new Actor(new Vector(10, 10)));
+items.set('пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ', new Actor(new Vector(15, 5)));
 
 function position(item) {
   return ['left', 'top', 'right', 'bottom']
@@ -87,7 +93,7 @@ function movePlayer(x, y) {
 function status(item, title) {
   console.log(`${title}: ${position(item)}`);
   if (player.isIntersect(item)) {
-    console.log(`Игрок подобрал ${title}`);
+    console.log(`пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ${title}`);
   }
 }
 
@@ -136,14 +142,16 @@ class Level {
     actorAt(movingObject) {
         if (this.actors === undefined || this.actors === []) {
             return undefined;
-        }
-        let result = [];
-        for (let actor of this.actors) {
-            if (actor.isIntersect(movingObject)) {
-                result.push(actor);
+        } else { 
+            return this.actors.find(el => el.isIntersect(movingObject));
+            /*let result = [];
+            for (let actor of this.actors) {
+                if (actor.isIntersect(movingObject)) {
+                    result.push(actor);
+                }
             }
+            return result[0];*/
         }
-        return result[0];
     }
     obstacleAt(moveActorTo, size) {
         if (moveActorTo instanceof Vector && size instanceof Vector) {
@@ -154,18 +162,16 @@ class Level {
             else if (movedto.x > this.width || movedto.x < 0 || moveActorTo.x < 0 || moveActorTo.y < 0 || movedto.y < 0 || moveActorTo.x > this.width) {
                 return 'wall';
             } else {
-                for (let i = moveActorTo.x; i < Math.floor(moveActorTo.x + size.x); i++) {
-                    for (let j = moveActorTo.y; j < Math.floor(moveActorTo.y + size.y); j++) {
-                        if (this.grid[j] !== undefined) {
-                            return grid[j][i];
-                        }
+                for (let i = moveActorTo.y; i <= Math.floor(moveActorTo.y + size.y); i++) {
+                    for (let j = moveActorTo.x; j < Math.floor(moveActorTo.x + size.x); j++) {
+                        if (this.grid[i][j] !== undefined) {
+                            return grid[i][j];
+                        } else {return undefined;}
                     }
-
-                }
-                // return this.grid[movedto.y][movedto.x];
+                }    
             }
         } else {
-            throw new Error('Некорректный тип аргумента');
+            throw new Error('пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ');
         }
     }
     removeActor(toBeRemoved) {
@@ -212,8 +218,8 @@ function MyCoin(title) {
 MyCoin.prototype = Object.create(Actor);
 MyCoin.constructor = MyCoin;
 
-const goldCoin = new MyCoin('Золото');
-const bronzeCoin = new MyCoin('Бронза');
+const goldCoin = new MyCoin('пїЅпїЅпїЅпїЅпїЅпїЅ');
+const bronzeCoin = new MyCoin('пїЅпїЅпїЅпїЅпїЅпїЅ');
 const player = new Actor();
 const fireball = new Actor();
 
@@ -224,30 +230,118 @@ level.playerTouched('coin', goldCoin);
 level.playerTouched('coin', bronzeCoin);
 
 if (level.noMoreActors('coin')) {
-  console.log('Все монеты собраны');
-  console.log(`Статус игры: ${level.status}`);
+  console.log('пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ');
+  console.log(`пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ: ${level.status}`);
 } else { console.log('coins not collected')}
 
 const obstacle = level.obstacleAt(new Vector(1, 1), player.size);
 if (obstacle) {
-  console.log(`На пути препятствие: ${obstacle}`);
+  console.log(`пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ${obstacle}`);
 }
 
 const otherActor = level.actorAt(player);
 if (otherActor === fireball) {
-  console.log('Пользователь столкнулся с шаровой молнией');
+  console.log('пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ');
 } */
-
+/*
 const grid = [
     new Array(3),
     ['wall', 'wall', 'lava']
-];
-const level = new Level(grid);
-runLevel(level, DOMDisplay);
+];*/
+//const level = new Level(grid);
+//runLevel(level, DOMDisplay);
 
 class LevelParser {
     constructor(dict) {
         this.dict = dict;
     }
-    actorsFromSymbol(sym) { }
+    actorFromSymbol(sym = 0) {
+        if (sym == 0 ) { return undefined;}
+        else if (sym in this.dict) {return this.dict[sym];}
+        else {return undefined;}
+     }
+    obstacleFromSymbol(sym) {
+       if (sym === 'x') { return 'wall';}
+       else if (sym === '!') { return 'lava';}
+       else { return undefined; }
+    }
+    createGrid(plan) {
+        if (plan.length === 0) {return [];}
+        let result = [];
+        for (let line of plan) {
+            result.push(line.split('').map(symbol => this.obstacleFromSymbol(symbol)));
+        }
+        return result;
+    }
+    createActors(plan) {
+		let result = [];
+		if (plan.length === 0) {
+			return [];
+		} 
+        if (this.dict === undefined) {return result;}
+        else { 
+		for (let line of plan) {
+			const Y = plan.indexOf(line);
+			let lineArr = line.split('');
+            for (let symbol of lineArr) {
+                const X = lineArr.indexOf(symbol);
+                let obj = this.actorFromSymbol(symbol);
+                //if (obj === Actor.constructor) {return result}
+                if ( obj instanceof Actor.constructor) {
+                    result.push(new obj(new Vector(X,Y)));
+                } 
+            }
+		}
+		return result;}
+    }
+    parse(plan) {
+        let grid = Array.from(this.createGrid(plan));
+        let actors = Array.from(this.createActors(plan));
+        let level = new Level(grid, actors);
+        return level;
+    }     
+}
+
+  
+class Fireball extends Actor {
+    constructor (position = new Vector(0,0), speed = new Vector(0,0)) {
+        super(position);
+        this.speed = speed;        
+    }
+
+getNextPosition(time = 1) {
+    return new Vector(this.pos.x + this.speed.times(time).x, this.pos.y + this.speed.times(time).y);
+}
+handleObstacle() {
+    let s = new Vector(this.speed.x * (-1), this.speed.y * (-1));
+    this.speed = s;
+}
+act(time, level) {
+    let newPosition = this.getNextPosition(time);
+    if (typeof level.obstacleAt.call(Fireball.prototype, newPosition, Fireball.prototype.size) === 'string') {
+
+        this.handleObstacle();
+    } else if (level.obstacleAt.call(Fireball.prototype, newPosition, Fireball.prototype.size) === undefined){
+        this.pos = newPosition;
+    }
+}
+}
+
+Object.defineProperty(Fireball.prototype, 'type', {
+    value: 'fireball',
+    enumerable: true,
+    configurable: true,
+}) 
+
+class HorizontalFireball extends Fireball {
+    constructor (position) {
+        super(position);
+        this.speed = new Vector(2, 0);
+    }
+}
+class VerticalFireball extends Fireball {
+    constructor (position) {
+        super(position);
+        this.speed = new Vector(0, 2);
+    }
 }
