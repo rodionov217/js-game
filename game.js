@@ -271,12 +271,15 @@ handleObstacle() {
     this.speed = s;
 }
 act(time, level) {
-    let newPosition = this.getNextPosition(time);
-    if (typeof level.obstacleAt.call(Fireball.prototype, newPosition, Fireball.prototype.size) === 'string') {
-
+    let currentPosition = new Vector(this.pos.x, this.pos.y);
+    let newPosition = new Vector(this.getNextPosition(time).x, this.getNextPosition(time).y);
+    const size = new Vector(this.size.x, this.size.y);
+    let obstacle = level.obstacleAt(newPosition, size);
+    if (obstacle === 'wall' || obstacle === 'lava') {
         this.handleObstacle();
-    } else if (level.obstacleAt.call(Fireball.prototype, newPosition, Fireball.prototype.size) === undefined){
-        this.pos = newPosition;
+        this.pos = new Vector(currentPosition.x, currentPosition.y);
+    } else if (obstacle === undefined) {
+        this.pos = new Vector (newPosition.x, newPosition.y);
     }
 }
 }
@@ -300,16 +303,19 @@ class VerticalFireball extends Fireball {
     }
 }
 
-const schema = [
-    '         ',
-    '         ',
-    'x       x',
-    '  x      ',
-    '     !xxx',
-    '         ',
-    'xxx!     ',
-    '       !!'
-  ];
-  const parser = new LevelParser();
-  const level = parser.parse(schema);
-  runLevel(level, DOMDisplay);
+class FireRain extends VerticalFireball {
+    constructor (position) {
+        super(position);
+        this.speed = new Vector(0, 3);
+        this.originalPos = position;
+    }
+    handleObstacle() {
+        let s = new Vector(0, 3);
+        this.speed = s;
+        this.pos = new Vector(this.originalPos.x, this.originalPos.y);
+    }
+    
+}
+
+
+
