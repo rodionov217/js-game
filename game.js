@@ -234,18 +234,18 @@ class LevelParser {
 		} 
         if (this.dict === undefined) {return result;}
         else { 
-		for (let line of plan) {
-			const Y = plan.indexOf(line);
+		plan.forEach(function (line, indexY) {
 			let lineArr = line.split('');
-            for (let symbol of lineArr) {
-                const X = lineArr.indexOf(symbol);
-                let obj = this.actorFromSymbol(symbol);
-                //if (obj === Actor.constructor) {return result}
+            lineArr.forEach(function(symbol, index){
+                let obj = this.actorFromSymbol(symbol)
                 if ( obj instanceof Actor.constructor) {
-                    result.push(new obj(new Vector(X,Y)));
+                    let newActor = new obj(new Vector(index, indexY))
+                    if (newActor instanceof Actor) {
+                        result.push(newActor);
+                    }
                 } 
-            }
-		}
+            }, this)
+		}, this)
 		return result;}
     }
     parse(plan) {
@@ -303,7 +303,7 @@ class VerticalFireball extends Fireball {
 const schema = [
     '         ',
     '         ',
-    '         ',
+    'x       x',
     '  x      ',
     '     !xxx',
     '         ',
