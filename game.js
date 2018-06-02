@@ -18,12 +18,6 @@ class Vector {
         return new Vector(this.x * t, this.y * t)
     }
 }
-//�������� ����������������� ������ ������
-/*const start = new Vector(30, 50);
-const moveTo = new Vector(5, 10);
-const finish = start.plus(moveTo.times(2));
-console.log(finish); */
-
 
 class Actor {
     constructor(position = new Vector(0, 0), size = new Vector(1, 1), speed = new Vector(0, 0)) {
@@ -59,44 +53,11 @@ Actor.prototype.isIntersect = function (actor) {
        /* попытка пройти последний тест "Объект пересекается с объектом, который частично содержится в нём". не проходит
     else if (((actor.left >= this.left && actor.left <= this.right) || (actor.right >= this.left && actor.right <= this.right)) &&  ((actor.top >= this.bottom && actor.top <= this.top) || (actor.bottom >= this.bottom && actor.bottom <= this.top))) {return true;}
     */
-   //еще попытка
-  
+    
     else {
         return true;
     }
 }
-
-/*
-const items = new Map();
-
-const player = new Actor();
-items.set('�����', player);
-items.set('������ ������', new Actor(new Vector(10, 10)));
-items.set('������ ������', new Actor(new Vector(15, 5)));
-
-function position(item) {
-  return ['left', 'top', 'right', 'bottom']
-    .map(side => `${side}: ${item[side]}`)
-    .join(', ');  
-}
-
-function movePlayer(x, y) {
-  player.pos = player.pos.plus(new Vector(x, y));
-}
-
-function status(item, title) {
-  console.log(`${title}: ${position(item)}`);
-  if (player.isIntersect(item)) {
-    console.log(`����� �������� ${title}`);
-  }
-}
-
-items.forEach(status);
-movePlayer(10, 10);
-items.forEach(status);
-movePlayer(5, -5);
-items.forEach(status); */
-
 
 class Level {
     constructor(grid, actors) {
@@ -121,7 +82,6 @@ class Level {
                 }
             }
             return max;
-        
     }
     get player() {
         for (let one of this.actors) {
@@ -148,8 +108,6 @@ class Level {
     }
     obstacleAt(moveActorTo, size) {
         if (moveActorTo instanceof Vector && size instanceof Vector) {
-            //size.x = Math.floor(size.x);
-            //size.y = Math.floor(size.y);
             let movedto = moveActorTo.plus(size);
             if (movedto.y > this.height || moveActorTo.y > this.height) { return 'lava'; }
             else if (movedto.x > this.width || movedto.x < 0 || moveActorTo.x < 0 || moveActorTo.y < 0 || movedto.y < 0 || moveActorTo.x > this.width) {
@@ -249,7 +207,7 @@ class LevelParser {
     }     
 }
 
-  
+
 class Fireball extends Actor {
     constructor (position = new Vector(0,0), speed = new Vector(0,0)) {
         super(position);
@@ -346,6 +304,19 @@ class Coin extends Actor {
         let springVector = new Vector(0, this.springDist * Math.sin(this.spring));
         return springVector;
     }
+    getNextPosition(time = 1) {
+        this.updateSpring(time);
+        let springVector = this.getSpringVector();
+        const originalPosition = new Vector(this.originalPos.x, this.originalPos.y); 
+        let newPosition = new Vector(this.originalPos.x, this.originalPos.y + springVector.y);
+        return newPosition;
+    }
+    act(time) {
+        this.updateSpring(time);
+        let newPosition = this.getNextPosition(time);
+
+        this.pos = new Vector (newPosition.x, newPosition.y) ;
+    }
 
 }
 
@@ -353,18 +324,38 @@ Object.defineProperty(Coin.prototype, 'type', {
     value: 'coin',
     enumerable: true,
     configurable: true,
-})
+});
 
-Coin.prototype.getNextPosition = function(time = 1) {
-    let springVector = this.getSpringVector();
-        const originalPosition = new Vector(this.originalPos.x, this.originalPos.y); 
-            let newPosition
-        this.updateSpring();
-     
-        return originalPosition.plus(springVector);
-}
-
-Coin.prototype.act = function(time) {
-    let newPosition = this.getNextPosition(time);
-        this.positon = new Vector (newPosition.x, newPosition.y);
-}
+const schemas = [
+    [
+      '         ',
+      '         ',
+      '    =    ',
+      '       oo',
+      '     !xxx',
+      ' @       ',
+      'xxx!     ',
+      '         '
+    ],
+    [
+      '      v  ',
+      '    v    ',
+      '  v      ',
+      '        o',
+      '        x',
+      '@   x    ',
+      'x        ',
+      '   =|    '
+    ]
+  ];
+  const actorDict = {
+    '@': Player,
+    'v': FireRain,
+    'o': Coin,
+    '=': HorizontalFireball,
+    '|': VerticalFireball
+  }
+  const parser = new LevelParser(actorDict);
+  runGame(schemas, parser, DOMDisplay)
+    .then(() => console.log('Вы выиграли приз!'));
+    
