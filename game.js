@@ -125,18 +125,21 @@ class Level {
 
     obstacleAt(moveActorTo, size) {
         if (moveActorTo instanceof Vector && size instanceof Vector) {
-            let movedto = moveActorTo.plus(size);
-            if (movedto.y > this.height || moveActorTo.y > this.height) { return 'lava'; }
-            else if (movedto.x > this.width || movedto.x < 0 || moveActorTo.x < 0 || moveActorTo.y < 0 || movedto.y < 0 || moveActorTo.x > this.width) {
+            let from = moveActorTo;
+            let to = moveActorTo.plus(size);
+            if (to.y > this.height) {
+                return 'lava';
+            }
+            if (to.x > this.width || to.x < 0 || from.x < 0 || from.y < 0 || to.y < 0) {
                 return 'wall';
             } else {
-                for (let i = Math.floor(moveActorTo.y); i < Math.ceil(moveActorTo.y + size.y); i++) {
-                    for (let j = Math.floor(moveActorTo.x); j < Math.ceil(moveActorTo.x + size.x); j++) {
-                        if (this.grid[i][j] === 'lava' || this.grid[i][j] === 'wall') {
-                            return this.grid[i][j];
-                        } else {return undefined;}
+                for (let y = Math.floor(from.y); y < Math.ceil(to.y); y++) {
+                    for (let x = Math.floor(from.x); x < Math.ceil(to.x); x++) {
+                        if (this.grid[y][x]) {
+                            return this.grid[y][x];
+                        }
                     }
-                }    
+                }
             }
         } else {
             throw new Error('������������ ��� ���������');
@@ -356,9 +359,9 @@ Object.defineProperty(Coin.prototype, 'type', {
 
 const schemas = [
     [
-      'v        ',
       '         ',
-      '   x=    ',
+      '         ',
+      '    =    ',
       '       oo',
       '     !xxx',
       ' @       ',
@@ -373,7 +376,7 @@ const schemas = [
       '        x',
       '@   x    ',
       'x        ',
-      '   =|    '
+      '         '
     ]
   ];
   const actorDict = {
