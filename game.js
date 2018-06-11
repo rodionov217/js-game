@@ -65,9 +65,8 @@ class Actor {
 
 class Level {
 	constructor(grid = [], actors = []) {
-		// тут лушче создать копии массивов, чтобы поля объекта нельзя было изменить извне
-		const gridArr = grid.map(el => el);
-		const actorsArr = actors.map(el => el);
+		const gridArr = grid.slice();
+		const actorsArr = actors.slice();
 		this.grid = gridArr;
 		this.actors = actorsArr;
 		this.height = this.grid.length;
@@ -135,9 +134,7 @@ class Level {
 
 class LevelParser {
 	constructor(dict) {
-		// здесь лучше создать копию объекта, чтобы поле нельзя было изменить извне
-
-		this.dict = dict;
+		this.dict = Object.assign({}, actorDict);
 	}
 
 	actorFromSymbol(sym) {
