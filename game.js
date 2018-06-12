@@ -65,11 +65,13 @@ class Actor {
 
 class Level {
 	constructor(grid = [], actors = []) {
+		// переменные тут можно не создавать
 		const gridArr = grid.slice();
 		const actorsArr = actors.slice();
 		this.grid = gridArr;
 		this.actors = actorsArr;
 		this.height = this.grid.length;
+		// передать массив аргументов в метод в ES6 можно без apply
 		this.width = this.grid.length === 0 ? 0 : Math.max.apply(this, this.grid.map(el => el.length));
 		this.player = this.actors.find(actor => actor.type === 'player');
 		this.status = null;
@@ -81,6 +83,7 @@ class Level {
 	}
 
 	actorAt(movingObject) {
+		// первая половина проверки дублируется в isIntersect
 		return this.actors.find(actor => (actor !== movingObject && actor.isIntersect(movingObject)));
 	}
 	
@@ -89,17 +92,24 @@ class Level {
 			throw new Error('Переданный аргумент не является типом Vector');
 		}
 
+		// значение присваивается один раз - лучше использовать const
 		let from = moveActorTo;
 		let to = moveActorTo.plus(size);
 
 		if (to.y > this.height) {
 			return 'lava';
 		}
+		// это условие можно упростить
+		// (если from.y < 0, то to.y тоже будет < 0)
 		if (to.x > this.width || to.x < 0 || from.x < 0 || from.y < 0 || to.y < 0) {
 			return 'wall';
+		// else не нужен
 		} else {
+			// округлённые значения лучше записать в переменные,
+			// чтобы не округлять на каждой итерации
 			for (let y = Math.floor(from.y); y < Math.ceil(to.y); y++) {
 				for (let x = Math.floor(from.x); x < Math.ceil(to.x); x++) {
+					// this.grid[y][x] можно записать в переменную, чтобы 2 раза не писать
 					if (this.grid[y][x]) {
 						return this.grid[y][x];
 					}
@@ -109,6 +119,7 @@ class Level {
 	}
 
 	removeActor(toBeRemoved) {
+		// const
 		let i = this.actors.indexOf(toBeRemoved);
 		if (i !== -1) {
 			this.actors.splice(i, 1);
@@ -133,6 +144,7 @@ class Level {
 }
 
 class LevelParser {
+	// в методе ошибка, посмотрите внимательно
 	constructor(dict) {
 		this.dict = Object.assign({}, actorDict);
 	}
@@ -140,6 +152,8 @@ class LevelParser {
 	actorFromSymbol(sym) {
 		return sym ? this.dict[sym] : undefined;
 	//если убрать проверку символа на undefined, ошибка - Cannot read property 'undefined' of undefined
+		// ошибка возникает из за того, что неопредлёт this.dict, а проверяете вы sym
+		// проверка лишняя, а для dict лучше добавить значение по-умолчанию в конструкторе
 	}
 
 	obstacleFromSymbol(sym) {
@@ -156,11 +170,14 @@ class LevelParser {
 	}
 
 	createActors(plan) {
+		// лучше const
 		let result = [];
+		// лучше проверить целостность объекта в конструкторе и убрать тут проверку
 		if (plan.length !== 0 && this.dict !== undefined) {
 			plan.forEach(function (line, indexY) {
 				line.split('').forEach(function (symbol, index) {
 					const obj = this.actorFromSymbol(symbol)
+					// почему .constructor?
 					if (obj instanceof Actor.constructor) {
 						const newActor = new obj(new Vector(index, indexY))
 						if (newActor instanceof Actor) {
@@ -168,7 +185,7 @@ class LevelParser {
 						}
 					}
 				}, this)
-			}, this)
+			}, this) // лучше использовать стрелочные функции и не передавать this
 		}
 		return result;
 	}
@@ -198,8 +215,12 @@ class Fireball extends Actor {
 	}
 
 	act(time, level = new Level) {
+		// const
 		let newPosition = this.getNextPosition(time);
+		// зачем ещё раз создавать вектор?
 		const size = new Vector(this.size.x, this.size.y);
+		// если добавится ещё одно препятствие код придётся менять в двух местах,
+		// так что лучше тут просто проверить что obstacleAt вернул что-нибудь
 		if (level.obstacleAt(newPosition, size) === 'wall' || level.obstacleAt(newPosition, size) === 'lava' ) {   //this.pos = currentPosition;
 			this.handleObstacle();
 		}
@@ -210,19 +231,25 @@ class Fireball extends Actor {
 }
 
 class HorizontalFireball extends Fireball {
+	// можно добавить значение по-умолчанию
 	constructor(position) {
+    // конструктор Fireball принимает 2 аргумента
 		super(position, new Vector(2, 0), new Vector(1, 1),);
 	}
 }
 
 class VerticalFireball extends Fireball {
+  // можно добавить значение по-умолчанию
 	constructor(position) {
+    // конструктор Fireball принимает 2 аргумента
 		super(position, new Vector(0, 2), new Vector(1, 1));
 	}
 }
 
 class FireRain extends Fireball {
+  // можно добавить значение по-умолчанию
 	constructor(position) {
+    // конструктор Fireball принимает 2 аргумента
 		super(position, new Vector(0, 3), new Vector(1, 1));
 		this.originalPos = position;
 	}
@@ -244,6 +271,7 @@ class Player extends Actor {
 }
 
 class Coin extends Actor {
+	// не опускайте аргементы конструктора Vector
 	constructor(position = new Vector) {
 		super(position.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
 		this.originalPos = new Vector(this.pos.x, this.pos.y);
