@@ -159,11 +159,11 @@ class LevelParser {
 
   createActors(plan) {
     const result = [];
-    plan.forEach((line, Y) => {
-      line.split('').forEach( (symbol, X) => {
+    plan.forEach((line, y) => {
+      line.split('').forEach( (symbol, x) => {
         const actorConstructor = this.actorFromSymbol(symbol);
         if (typeof actorConstructor === 'function') {
-          const newActor = new actorConstructor(new Vector(X, Y));
+          const newActor = new actorConstructor(new Vector(x, y));
           if (newActor instanceof Actor) {
             result.push(newActor);
           }
